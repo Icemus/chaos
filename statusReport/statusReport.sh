@@ -1,7 +1,15 @@
 #!/usr/bin/env sh
 
-srdate=`date +%Y-%m-%d`
-srfile=${srdate}_status_report.log
+## get statusReport directory
+srdir=$(dirname $(readlink -f $0))
+
+## set autoMail.py & statusReport.ini
+srmail=${srdir}/autoMail.py
+srini=${srdir}/statusReport.ini
+
+## Create statusReport
+srdate=$(date +%Y-%m-%d)
+srfile=${srdir}/${srdate}_status_report.log
 
 cat /dev/null > ${srfile}
 
@@ -21,5 +29,6 @@ echo -e "<<<<<<< yum check-update end" >> ${srfile}
 
 echo -e "\nStatus Report : Done" >> ${srfile}
 
-autoMail.py -c ./statusReport.ini -s "Status Report : ${srdate}" -m ${srfile}
+## Send statusReport By EMail
+${srmail} -c ${srini} -s "Status Report : ${srdate}" -m ${srfile}
 
